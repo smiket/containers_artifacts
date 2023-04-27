@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: trip-insights-poi
+spec:
+  type: ClusterIP
+  selector:
+    app: trip-insights-poi
+  ports:
+    - port: 80
+      name: http
+      protocol: TCP
+      targetPort: http

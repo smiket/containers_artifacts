@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: trip-insights-trips
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: trip-insights-trips
+  template:
+    metadata:
+      labels:
+        app: trip-insights-trips
+    spec:
+      nodeSelector:
+        kubernetes.io/os: linux
+      containers:
+        - image: registrylmf6837.azurecr.io/tripinsights/trips:1.0
+          name: trip-insights-trips
+          resources:
+            requests:
+              cpu: 250m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 256Mi
+          ports:
+            - containerPort: 80
+              name: http
+          env:
+            - name: PORT
+              value: '80'
+            - name: CONFIG_FILES_PATH
+              value: '/secrets'
+            - name: OPENAPI_DOCS_URI
+              value: 'http://localhost'
+            - name: DEBUG_LOGGING
+              value: 'true'
+          envFrom:
+          - secretRef:
+              name: db-credentials

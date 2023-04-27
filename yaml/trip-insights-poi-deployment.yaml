@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: trip-insights-poi
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: trip-insights-poi
+  template:
+    metadata:
+      labels:
+        app: trip-insights-poi
+    spec:
+      nodeSelector:
+        kubernetes.io/os: linux
+      containers:
+        - image: registrylmf6837.azurecr.io/tripinsights/poi:v1
+          name: trip-insights-poi
+          resources:
+            requests:
+              cpu: 250m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 256Mi
+          ports:
+            - containerPort: 80
+              name: http
+          env:
+            - name: ASPNETCORE_ENVIRONMENT
+              value: 'Development'
+            - name: WEB_PORT
+              value: '80'
+            - name: WEB_SERVER_BASE_URI
+              value: 'http://0.0.0.0'
+          envFrom:
+          - secretRef:
+              name: db-credentials

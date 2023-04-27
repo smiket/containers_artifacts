@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: trip-insights-user
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: trip-insights-user
+  template:
+    metadata:
+      labels:
+        app: trip-insights-user
+    spec:
+      nodeSelector:
+        kubernetes.io/os: linux
+      containers:
+        - image: registrylmf6837.azurecr.io/tripinsights/user-java:1.0
+          name: trip-insights-user
+          resources:
+            requests:
+              cpu: 250m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 256Mi
+          ports:
+            - containerPort: 80
+              name: http
+          env:
+            - name: PORT
+              value: '80'
+          envFrom:
+          - secretRef:
+              name: db-credentials

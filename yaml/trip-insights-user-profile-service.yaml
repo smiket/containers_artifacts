@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: trip-insights-user-profile
+spec:
+  type: ClusterIP
+  selector:
+    app: trip-insights-user-profile
+  ports:
+    - port: 80
+      name: http
+      protocol: TCP
+      targetPort: http

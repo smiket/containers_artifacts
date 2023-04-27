@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: trip-insights-trip-viewer
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: trip-insights-trip-viewer
+  template:
+    metadata:
+      labels:
+        app: trip-insights-trip-viewer
+    spec:
+      nodeSelector:
+        kubernetes.io/os: linux
+      containers:
+        - image: registrylmf6837.azurecr.io/tripinsights/tripviewer:1.0
+          name: trip-insights-user-profile
+          resources:
+            requests:
+              cpu: 250m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 256Mi
+          ports:
+            - containerPort: 80
+              name: http
+          env:
+            - name: USERPROFILE_API_ENDPOINT
+              value: 'http://trip-insights-user-profile'
+            - name: TRIPS_API_ENDPOINT
+              value: 'http://trip-insights-trips'
+
